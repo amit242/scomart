@@ -1,0 +1,62 @@
+/* React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
+
+@import '../variables.less';
+
+@brand-color: #61dafb;
+
+.Header {
+    background: #22426d;
+    color: #fff;
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    height: 75px;
+
+    &-container {
+        margin-left: 15%;
+        margin-right: 15%;
+        padding: 7px 2px;
+        //max-width: @max-content-width;
+        //min-width: 550px;
+    }
+
+    &-brand {
+        color: lighten(@brand-color, 10%);
+        text-decoration: none;
+        font-size: 1.75em; // ~28px
+    }
+
+    &-brandImg {
+
+    }
+
+    &-brandTxt {
+      margin-left: 10px;
+      font-family: cursive;
+    }
+
+    &-nav {
+        float: right;
+        margin-top: 6px;
+        
+    }
+
+    &-banner {
+    text-align: center;
+    }
+
+    &-bannerTitle {
+    margin: 0;
+    padding: 10px;
+    font-weight: normal;
+    font-size: 4em;
+    line-height: 1em;
+    }
+
+    &-bannerDesc {
+    padding: 0;
+    color: rgba(255, 255, 255, .5);
+    font-size: 1.25em;
+    margin: 0;
+    }
+}
