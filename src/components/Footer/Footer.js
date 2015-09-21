@@ -47,7 +47,7 @@ class Footer {
     return (
       <div className={footerClassName}>
         <div className="Footer-container">
-          <span className="Footer-text">© closYaar</span>
+          <span className="Footer-text">© scomart</span>
           <span className="Footer-spacer"> | </span>
           <span ref="viewport" className="Footer-viewport Footer-text Footer-text--muted">{viewportString}</span>
           <span className="Footer-spacer">|</span>
@@ -67,7 +67,7 @@ class Footer {
     /*return (
       <div className={footerClassName}>
         <div className="Footer-container">
-          <span className="Footer-text">© closYaar</span>
+          <span className="Footer-text">© scomart</span>
           <span className="Footer-spacer"> | </span>
           <span ref="viewport" className="Footer-viewport Footer-text Footer-text--muted">{viewportString}</span>
           <span className="Footer-spacer">|</span>

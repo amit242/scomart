@@ -15,7 +15,7 @@ class Header {
       <div className="Header">
         <div className="Header-container">
           <Link className="Header-brand" to="/">
-            <img className="Header-brandImg" src={require('./pulse-logo.png')} width="114" height="50" alt="closyaar" />
+            <img className="Header-brandImg" src={require('./pulse-logo.png')} width="114" height="50" alt="scomart" />
           </Link>
           <Navigation className="Header-nav" {...this.props}/>
           <div className="Header-banner">

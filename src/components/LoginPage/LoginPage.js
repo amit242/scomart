@@ -64,7 +64,7 @@ export default class LoginPage extends Component {
     console.log('LoginPage.render()| props', this.props);
     console.log('LoginPage.render()| loading page?', this.props.rememberuser && !this.state.failed);
 
-    let title = 'Login to Closyaar';
+    let title = 'Login to scomart';
     this.context.onSetTitle(title);
     return this.props.rememberuser && !this.state.failed ? (<LoadingPage />) :
      (<div className="LoginPage">
