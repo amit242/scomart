@@ -66,8 +66,6 @@ export default class Login extends React.Component {
             </div>
             <input type="submit" onClick={this.authenticate.bind(this)} value="Log in" />
           </form>
-          <div className="Login-spacer">or</div>
-          <Link className="Login-link Login-link-highlight" to="register">Login with Facebook</Link>
         </div>
     );
   }

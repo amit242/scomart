@@ -5,20 +5,12 @@ import appRoutes from './routes/Routes';
 import RouterContainer from './services/RouterContainer';
 import LoginAction from './actions/LoginAction';
 import ClientDetection from './utils/ClientDetection';
-// import LoginPage from './components/LoginPage';
-// import HomePage from './components/UserHomePage';
-// import RegisterPage from './components/RegisterPage';
+import AuthService from './services/AuthService';
 import AppActions from './actions/AppActions';
 import ActionTypes from './constants/ActionTypes';
 import FastClick from 'fastclick';
+import CookieUtils from './utils/CookieUtils';
 
-/*var appRoutes = (
-  <Route handler={App}>
-      <Route name="login" handler={LoginPage}/>
-      <Route name="home" path="/" handler={HomePage}/>
-      <Route name="register" handler={RegisterPage}/>
-    </Route>
-);*/
 
 let path = decodeURI(window.location.pathname);
 function run() {
@@ -31,12 +23,14 @@ function run() {
   });
   RouterContainer.set(router);
 
-  let jwt = localStorage.getItem('closyaar-jwt');
+  console.log('Client.run()| Path:', window.location, window.location.search);
+  let jwt = localStorage.getItem('scomart-jwt');
   console.log('Client.run()| localStorage jwt:',jwt);
-  let tryingLogin = false;
+  let rememberuser = false;
+
   if (jwt) {
-    tryingLogin = true;
-    LoginAction.loginUser(jwt);
+    rememberuser = true;
+    AuthService.verifyJWT(jwt);
   }
 
   router.run(function (Handler) {
@@ -48,8 +42,9 @@ function run() {
         onSetTitle: value => {document.title = value; }
       }
     };
-    console.log('Client.run()|  react render props:', props);
-    React.render(<Handler { ...props } tryLogin = {tryingLogin}/>, document.getElementById('app'));
+    console.log('Client.router.run()|  cookies:', document.cookie, CookieUtils.getCookie('rememberuser'));
+    console.log('Client.router.run()|  react render props:', props, Handler.routes, Handler.getCurrentPathname());
+    React.render(<Handler { ...props } rememberuser={CookieUtils.getCookie('rememberuser') === 'true'} />, document.getElementById('app'));
   });
 
   dt = new Date();
@@ -57,6 +52,7 @@ function run() {
 }
 
 try {
+  console.log('promise client run:');
   Promise.all([
     new Promise((resolve) => {
       if (window.addEventListener) {

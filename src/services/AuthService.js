@@ -3,6 +3,28 @@ import LoginActions from '../actions/LoginAction';
 import jwt from 'jsonwebtoken';
 
 class AuthService {
+  verifyJWT(jwt) {
+    if(jwt) {
+      http.get('/api/verify')
+      .set('x-scomart-access-token', jwt)
+      .end((err, response) => {
+        console.log('AuthService. rest call|  err, response', err, response);
+        if(!err && response && response.body && response.body.verified) {
+          console.log('AuthService.verifyJWT()| JWT verification success!!!');
+          
+          LoginActions.loginUser(jwt, response.body.user);
+        } else {
+          console.log('AuthService.verifyJWT()| JWT verification Fail!!!');
+          LoginActions.loginFailed();
+        }
+        // console.log('LoginAction.loginUser()| RouterContainer.get().getCurrentQuery():', RouterContainer.get().getCurrentPathname());
+        // var nextPath = RouterContainer.get().getCurrentQuery() && RouterContainer.get().getCurrentQuery().redirect || '/';
+        // console.log('LoginAction.loginUser()| nextPath:', nextPath);
+        // RouterContainer.get().transitionTo(nextPath);
+        
+      });
+    }
+  }
 
   login(username, password, errorCb) {
     console.log('AuthService.login()| Trying login user with', username, password);
@@ -22,7 +44,7 @@ class AuthService {
         // We get a JWT back.
         let jwt = response.body.token;
         // We trigger the LoginAction with that JWT.
-        LoginActions.loginUser(jwt);
+        LoginActions.loginUser(jwt, response.body.user);
         return true;
       } else {
         console.log('AuthService.login()| Authentication Failed!!!');

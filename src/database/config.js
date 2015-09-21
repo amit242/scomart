@@ -1,4 +1,4 @@
 module.exports = {
-    'secret': 'antykadbtokenseed',
-    'database': 'mongodb://amit:amitadmin@ds063892.mongolab.com:63892/antykadb'
+    'secret': 'scomartdbtokenseed',
+    'database': 'mongodb://amit:amitadmin@ds051953.mongolab.com:51953/scromartdb'
 };

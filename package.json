@@ -1,5 +1,5 @@
 {
-  "name": "antyka",
+  "name": "scomart",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -77,5 +77,20 @@
     "build": "gulp build",
     "serve": "gulp serve",
     "sync": "gulp sync"
-  }
+  },
+  "description": "",
+  "main": "gulpfile.babel.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amit242/scomart.git"
+  },
+  "author": "amit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amit242/scomart/issues"
+  },
+  "homepage": "https://github.com/amit242/scomart#readme"
 }

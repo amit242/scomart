@@ -43,10 +43,40 @@
 //
 // reusable classes
 // -----------------------------------------------------------------------------
-.content-margin {
-    margin-top: 75px;
+.content-width {
+    width: 100%;
 }
 
 .box-border {
   border: 2px solid #789;
+}
+
+.page-width {
+  width: 1000px;
+}
+.page-margin {
+    .page-width;
+    position: static;
+    padding-top: 60px;
+    //padding-left: @left-margin;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hide {
+  display: none;
+}
+
+.bottom {
+  bottom: 0px;
+}
+
+.icon-medium {
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
+}
+
+.nowrap {
+  white-space: nowrap;
 }

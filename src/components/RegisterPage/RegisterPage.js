@@ -84,7 +84,6 @@ class RegisterPage extends React.Component {
           {errorComponent}
           <TextBox id="name" className="RegisterPage-textbox" ref="name" value={this.name} type="text" placeholder="Name" onChange={this._onchange.bind(this)}/>
           <TextBox id="email" className="RegisterPage-textbox" ref="email" value={this.email} type="text" placeholder="email id" onChange={this._onchange.bind(this)}/>
-          <TextBox id="address" className="RegisterPage-textbox" ref="address" value={this.address} type="text" placeholder="address" maxLines={3} onChange={this._onchange.bind(this)}/>
           <input type="submit"  value="Sign up" onClick={this.signUp.bind(this)} />
         </form>;
     }

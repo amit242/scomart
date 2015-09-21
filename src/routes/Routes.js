@@ -14,6 +14,10 @@ module.exports = [
       <Route name="home" handler={HomePage}/>
       <Route name="register" path="/register" handler={RegisterPage}/>
       <Route name="signup" path="/signup" handler={SetPassword}/>
+      <Route name="about" path="/notfound" handler={NotFound}/>
+      <Route name="contact" path="/notfound" handler={NotFound}/>
+      <Route name="privacy" path="/notfound" handler={NotFound}/>
+      <Route name="notfound" path="/notfound" handler={NotFound}/>
       <NotFoundRoute handler={NotFound}/>
     </Route>
 ];

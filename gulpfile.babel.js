@@ -181,7 +181,7 @@ gulp.task('deploy', cb => {
   const push = require('git-push');
   const remote = argv.production ?
     'https://github.com/{user}/{repo}.git' :
-    'https://github.com/amit242/antyka-test.git';
+    'https://github.com/amit242/scomart-test.git';
   push('./build', remote, cb);
 });
 

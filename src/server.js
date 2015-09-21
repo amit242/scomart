@@ -8,6 +8,7 @@ import express from 'express';
 import React from 'react';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
 //import './dispatchers/Dispatcher';
 //import './stores/AppStore';
@@ -34,6 +35,7 @@ server.set('superSecret', dbConfig.secret); // secret variable
 // use body parser so we can get info from POST and/or URL parameters
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
+server.use(cookieParser());
 
 // TODO: move transporter to a diff file
 //--------------------------------------------------------------------------------
@@ -42,8 +44,8 @@ server.use(bodyParser.json());
 var transporter = Nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'closyaar@gmail.com',
-        pass: 'antyka@gmail.com'
+        user: 'scomart.pulse@gmail.com',
+        pass: 'pulse@gmail.com'
     }
 });
 //--------------------------------------------------------------------------------
@@ -136,13 +138,13 @@ apiRoutes.post('/signup', function(req, res) {
         console.log("server.post()| REST call /signup: server host:", host);
         // setup e-mail data with unicode symbols
         let mailOptions = {
-            from: 'Closyaar<closyaar@gmail.com>', // sender address
+            from: 'scomart<scomart@gmail.com>', // sender address
             to: result.email, // list of receivers
-            subject: 'Welcome to Closyaar', // Subject line
+            subject: 'Welcome to scomart', // Subject line
             text: '', // plaintext body
             html: '<div>Hello <b>' + result.name + '</b>,<p>Please <a href="http://' + host + '/signup?key=' + result.jwt 
-            + '">Complete your registration</a> to <a href="http://' + host + '">Closyaar</a></p>'
-            + '<p>Looking forward to see you,<br><b>Closyaar Team</b></p></div>' // html body
+            + '">Complete your registration</a> to <a href="http://' + host + '">scomart</a></p>'
+            + '<p>Looking forward to see you,<br><b>scomart Team</b></p></div>' // html body
         };
 
         // send mail with defined transport object
@@ -190,7 +192,7 @@ apiRoutes.post('/authenticate', function(req, res) {
         let expires = expiresInMins(minExpire);
 
         let signObj = {
-          user: user.userid,
+          userid: user.userid,
           name: user.name,
           id: user._id,
           expires: expires // this acts a token differentiator
@@ -200,10 +202,12 @@ apiRoutes.post('/authenticate', function(req, res) {
         });
 
         // return the information including token as JSON
+        user.password = null;
+        //delete user.password;
         res.json({
           success: true,
           message: 'Login Success!',
-          name: user.name,
+          user: user,
           //expires: expires,
           token: token
         });
@@ -261,7 +265,7 @@ apiRoutes.post('/changepassword', function(req, res) {
 apiRoutes.use(function(req, res, next) {
 
   // check header or url parameters or post parameters for token
-  let token = req.body.token || req.query.token || req.headers['x-closyaar-access-token'];
+  let token = req.body.token || req.query.token || req.headers['x-scomart-access-token'];
 
   // decode token
   if (token) {
@@ -291,16 +295,36 @@ apiRoutes.use(function(req, res, next) {
 
 apiRoutes.get('/verify', function(req, res) {
   console.log('Server.apiRoutes() REST Call to /verify:', req.decoded);
-  let validUser = {
-    verified: true,
-    user: req.decoded.user,
-    name: req.decoded.name
-  }
-  res.json(validUser);
+  let mongoDBUserId = req.decoded.id;
+
+  userModel.findOne({
+    _id: mongoDBUserId
+  }, function(err, user) {
+
+    if (err) {
+      console.log('server.REST.POST.changepassword()| DB error:', err);
+      return res.status(403).json({ success: false, message: 'user verification failed. database exception.' });
+    }
+
+    if (!user) {
+      return res.status(403).json({ success: false, message: 'user verification failed. User not found.' });
+    } else if (user) {
+
+      console.log('server.REST.POST.changepassword()| User found:', user);
+      user.password = null;
+      let validUser = {
+        verified: true,
+        user: user
+      }
+      return res.status(200).json(validUser);
+    }
+  });
+
+  
 });
 
 apiRoutes.get('/verifyusertoken', function(req, res) {
-  let token = req.body.token || req.query.token || req.headers['x-closyaar-access-token'];
+  let token = req.body.token || req.query.token || req.headers['x-scomart-access-token'];
   console.log('Server.apiRoutes() REST Call to /verifyusertoken token==>', token);
   let userID = req.decoded.user.userid;
   
@@ -356,6 +380,8 @@ server.get('*', async (req, res, next) => {
   let dt = new Date();
   console.log('=============================================');
   console.log('server.server.get()| render start...', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' +  dt.getMilliseconds());
+  console.log('server.server.get()| req query string==>', req.query);
+  console.log('server.server.get()| req cookies string==>', req.cookies.rememberuser);
   try {
     let isMobile = ClientDetection.isMobile(req.headers['user-agent']);
     // console.log('Serverjs AMIT: isMobile:', isMobile);
@@ -394,7 +420,7 @@ server.get('*', async (req, res, next) => {
           <Route name="home" handler={HomePage}/>
       </Route>
     );*/
-    console.log('server.server.get()| req.url:', req.url);
+    console.log('server.server.get()| req.url:', req.params);
     var router = Router.create({
       location: req.url,
       routes: appRoutes,
@@ -404,7 +430,8 @@ server.get('*', async (req, res, next) => {
         if (abortReason.constructor.name === 'Redirect') {
           let url = this.makePath(abortReason.to, abortReason.params, abortReason.query);
 
-          console.log('server.Router.create().onAbort()| url: [', url, '] requrl:', req.url);
+          url +='?redirect=' + abortReason.query;
+          console.log('server.Router.create().onAbort()| url: [', url, '] q:', abortReason.params);
           res.redirect(url);
           
         } else {
@@ -426,11 +453,11 @@ server.get('*', async (req, res, next) => {
       console.log('server.Router.run()| router running...');
       console.log('server.Router.run()| router Query params:', state.query);
       
-      data.body = React.renderToString(<Handler query={state.query} context={{
+      data.body = React.renderToString(<Handler rememberuser={req.cookies.rememberuser === 'true'} context={{
         onInsertCss: value => css.push(value),
         onSetTitle: value => {data.title = value; },
         onSetMeta: (key, value) => data[key] = value,
-        onPageNotFound: () => notFound = true
+        onPageNotFound: () => {notFound = true;console.log('PAGE NOT FOUND!!!!');}
       }} />);
       data.css = css.join('');
       let html = template(data);
